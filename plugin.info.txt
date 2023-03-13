@@ -1,0 +1,7 @@
+base   structacl
+author Anna Dabrowska
+email  dokuwiki@cosmocode.de
+date   2023-03-16
+name   structacl plugin
+desc   Additional ACL rules based on struct
+url    https://www.dokuwiki.org/plugin:structacl
