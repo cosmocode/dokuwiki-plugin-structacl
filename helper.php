@@ -1,6 +1,8 @@
 <?php
 
-class helper_plugin_structacl extends DokuWiki_Plugin
+use dokuwiki\Extension\Plugin;
+
+class helper_plugin_structacl extends Plugin
 {
     public const STRUCTACL_SEPCHAR = '.';
     /**
@@ -20,8 +22,8 @@ class helper_plugin_structacl extends DokuWiki_Plugin
             $line = trim($line);
             if ($line === '' || strpos($line, self::STRUCTACL_SEPCHAR) === false) continue;
 
-            list($schema, $field) = explode(self::STRUCTACL_SEPCHAR, $line, 2);
-            $config[$schema] = $config[$schema] ?? [];
+            [$schema, $field] = explode(self::STRUCTACL_SEPCHAR, $line, 2);
+            $config[$schema] ??= [];
             $config[$schema][] = $field;
         }
 

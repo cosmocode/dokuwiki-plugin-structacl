@@ -1,5 +1,10 @@
 <?php
 
+use dokuwiki\Extension\ActionPlugin;
+use dokuwiki\Extension\EventHandler;
+use dokuwiki\Extension\Event;
+use dokuwiki\plugin\struct\meta\Schema;
+use dokuwiki\plugin\struct\types\User;
 use dokuwiki\plugin\struct\meta\AccessTable;
 use dokuwiki\plugin\struct\meta\Assignments;
 use dokuwiki\plugin\struct\meta\StructException;
@@ -10,10 +15,10 @@ use dokuwiki\plugin\struct\meta\StructException;
  * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
  * @author  Anna Dabrowska <dokuwiki@cosmocode.de>
  */
-class action_plugin_structacl extends \dokuwiki\Extension\ActionPlugin
+class action_plugin_structacl extends ActionPlugin
 {
     /** @inheritDoc */
-    public function register(Doku_Event_Handler $controller)
+    public function register(EventHandler $controller)
     {
         $mode = $this->getConf('run');
         $controller->register_hook('AUTH_ACL_CHECK', $mode, $this, 'handleAclCheck', $mode);
@@ -25,11 +30,11 @@ class action_plugin_structacl extends \dokuwiki\Extension\ActionPlugin
      * If current user is found in a configured struct field of the current page,
      * upload permissions are granted.
      *
-     * @param Doku_Event $event event object by reference
+     * @param Event $event event object by reference
      * @param string $mode BEFORE|AFTER
      * @return void
      */
-    public function handleAclCheck(Doku_Event $event, $mode)
+    public function handleAclCheck(Event $event, $mode)
     {
         global $ID;
         global $REV;
@@ -52,12 +57,12 @@ class action_plugin_structacl extends \dokuwiki\Extension\ActionPlugin
                 continue;
             }
             try {
-                $schema = new \dokuwiki\plugin\struct\meta\Schema($schemaName);
+                $schema = new Schema($schemaName);
                 $schemaData = AccessTable::getPageAccess($schemaName, $ID, (int)$REV);
                 $data = $schemaData->getData();
                 foreach ($fields as $field) {
                     $col = $schema->findColumn($field);
-                    if ($col && is_a($col->getType(), \dokuwiki\plugin\struct\types\User::class)) {
+                    if ($col && is_a($col->getType(), User::class)) {
                         $value = $data[$field]->getValue();
                         if (empty($value)) continue;
                         // multivalue field?
@@ -74,7 +79,7 @@ class action_plugin_structacl extends \dokuwiki\Extension\ActionPlugin
         }
 
         // grant upload permissions if current user is found in struct field
-        if (!empty($users) && in_array($event->data['user'], $users)) {
+        if ($users !== [] && in_array($event->data['user'], $users)) {
             $event->result = AUTH_UPLOAD;
         }
 
