@@ -84,4 +84,3 @@ class action_plugin_structacl extends \dokuwiki\Extension\ActionPlugin
         }
     }
 }
-

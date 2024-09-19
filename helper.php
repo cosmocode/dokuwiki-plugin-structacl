@@ -2,7 +2,7 @@
 
 class helper_plugin_structacl extends DokuWiki_Plugin
 {
-    const STRUCTACL_SEPCHAR = '.';
+    public const STRUCTACL_SEPCHAR = '.';
     /**
      * Convert config lines "schema.field name" into an array
      *
@@ -11,7 +11,7 @@ class helper_plugin_structacl extends DokuWiki_Plugin
      */
     public function getConfiguration($confValue)
     {
-        $lines = explode(PHP_EOL , $confValue);
+        $lines = explode(PHP_EOL, $confValue);
         $config = [];
 
         foreach ($lines as $line) {
