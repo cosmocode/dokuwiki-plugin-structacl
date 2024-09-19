@@ -59,6 +59,7 @@ class action_plugin_structacl extends \dokuwiki\Extension\ActionPlugin
                     $col = $schema->findColumn($field);
                     if ($col && is_a($col->getType(), \dokuwiki\plugin\struct\types\User::class)) {
                         $value = $data[$field]->getValue();
+                        if (empty($value)) continue;
                         // multivalue field?
                         if (is_array($value)) {
                             $users = array_merge($users, $value);
